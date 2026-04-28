@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="panel">
+  <h2>Search Weather</h2>
+  <form method="post" action="/search" class="search-form">
+    <input
+      type="text"
+      name="city"
+      placeholder="Enter city name, e.g. London"
+      value="{{ searched_city }}"
+      required
+    />
+    <button type="submit">Search</button>
+  </form>
+
+  {% if error %}
+    <div class="error">{{ error }}</div>
+  {% endif %}
+</section>
+
+{% if weather %}
+<section class="panel">
+  <h2>Current Weather</h2>
+  <div class="weather-grid">
+    <div><strong>City:</strong> {{ weather.location.name }}, {{ weather.location.country }}</div>
+    <div><strong>Local time:</strong> {{ weather.location.localtime }}</div>
+    <div><strong>Condition:</strong> {{ weather.current.condition.text }}</div>
+    <div><strong>Temperature:</strong> {{ weather.current.temp_c }} °C</div>
+    <div><strong>Wind:</strong> {{ weather.current.wind_kph }} kph</div>
+    <div><strong>Humidity:</strong> {{ weather.current.humidity }}%</div>
+  </div>
+
+  <h3>3-Day Forecast</h3>
+  <div class="forecast-grid">
+    {% for day in weather.forecast.forecastday %}
+      <article class="forecast-card">
+        <h4>{{ day.date }}</h4>
+        <p><strong>Max:</strong> {{ day.day.maxtemp_c }} °C</p>
+        <p><strong>Min:</strong> {{ day.day.mintemp_c }} °C</p>
+        <p><strong>Rain chance:</strong> {{ day.day.daily_chance_of_rain }}%</p>
+        <p><strong>Condition:</strong> {{ day.day.condition.text }}</p>
+      </article>
+    {% endfor %}
+  </div>
+
+  <form method="post" action="/favourites/add" class="save-form">
+    <input type="hidden" name="city_name" value="{{ weather.location.name }}" />
+    <input type="hidden" name="country" value="{{ weather.location.country }}" />
+    <button type="submit">Save to favourites</button>
+  </form>
+</section>
+{% endif %}
+
+<section class="panel">
+  <h2>Favourite Cities</h2>
+  {% if favourites %}
+    <div class="favourites-list">
+      {% for item in favourites %}
+        <div class="favourite-item">
+          <div>
+            <strong>{{ item.city_name }}</strong>
+            {% if item.country %}<span>({{ item.country }})</span>{% endif %}
+          </div>
+          <form method="post" action="/favourites/delete/{{ item.id }}">
+            <button type="submit" class="danger">Remove</button>
+          </form>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>No favourite cities saved yet.</p>
+  {% endif %}
+</section>
+{% endblock %}
