@@ -8,15 +8,6 @@ class WeatherService:
     BASE_URL = "https://api.weatherapi.com/v1/forecast.json"
 
     async def get_weather(self, city: str, days: int = 3) -> dict:
-        """
-        Fetch weather forecast data for a given city.
-
-        Logs:
-        - API request attempts
-        - Successful responses
-        - Failures and exceptions
-        """
-
         log_info(f"Fetching weather data for city: {city}")
 
         params = {
@@ -29,32 +20,22 @@ class WeatherService:
 
         try:
             async with httpx.AsyncClient(timeout=15.0) as client:
-                response = await client.get(
-                    self.BASE_URL,
-                    params=params
-                )
-
+                response = await client.get(self.BASE_URL, params=params)
                 response.raise_for_status()
 
-                log_info(
-                    f"Weather API success for city: {city}"
-                )
+                log_info(f"Weather API success for city: {city}")
 
                 return response.json()
 
         except httpx.HTTPStatusError as http_err:
-
             log_error(
                 f"HTTP error while fetching weather for {city}: "
                 f"{http_err.response.status_code}"
             )
-
             raise
 
         except Exception as ex:
-
             log_error(
                 f"Unexpected error while fetching weather for {city}: {str(ex)}"
             )
-
             raise
