@@ -133,6 +133,31 @@ traces
 | order by timestamp desc
 | take 20
 
+
+## Phase 3.2 — Structured Logging
+
+Structured application logging was implemented using Python logging and Azure Monitor OpenTelemetry.
+
+### Features Implemented
+
+- Weather API request logging
+- Structured JSON context logging
+- Latency measurement tracking
+- Error detection logging
+
+### Example Log Output
+
+Weather request started | {"city": "London", "days": 3}
+
+Weather request successful | {"city": "London", "latency_seconds": 0.42}
+
+### Azure Log Query
+
+```kql
+traces
+| order by timestamp desc
+| take 20
+
 Planned Phases
 
 Phase 4 — Containerization (Docker)
