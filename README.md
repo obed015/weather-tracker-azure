@@ -1,95 +1,148 @@
-# Weather Tracker – Azure Compute, Containers, Functions, Monitoring, and CI/CD
+# Weather Tracker — Azure Cloud Engineering Project
 
-A portfolio-grade Azure Cloud Engineer project that starts as a local FastAPI weather app and evolves into a fully deployed Azure solution using App Service, Azure Container Registry, Azure Container Instances, Azure Container Apps, Azure Functions, Application Insights, Azure Monitor, Key Vault, and GitHub Actions.
+A production-style Azure cloud application designed to demonstrate real-world cloud engineering practices including compute hosting, monitoring, observability, and infrastructure deployment.
 
-## Current phase
+This project simulates a cloud-hosted weather platform where users can search cities, view forecast data, and store favourite locations. The system integrates Azure monitoring tools to provide telemetry, logging, and health visibility.
 
-Phase 1 – Local project foundation and working weather MVP
+---
 
-## Features so far
+#  Project Goals
+
+This project demonstrates hands-on Azure cloud engineering skills aligned with real-world infrastructure and DevOps practices.
+
+Key goals:
+
+- Deploy a Python FastAPI application to Azure
+- Host cloud workloads using Azure App Service
+- Implement structured logging and observability
+- Integrate Azure Application Insights telemetry
+- Build production-style monitoring workflows
+- Prepare the system for containerization and CI/CD deployment
+
+---
+
+#  Technology Stack
+
+## Application
+
+- Python 3.12
+- FastAPI
+- Jinja2 Templates
+- SQLite (development database)
+- HTTPX (external API calls)
+
+## Azure Services
+
+- Azure App Service (Linux)
+- Azure Application Insights
+- Azure Monitor
+- Azure Resource Groups
+
+## Observability
+
+- Azure Monitor OpenTelemetry
+- Application Insights request telemetry
+- Structured logging
+- Health check endpoints
+
+## DevOps & Tooling
+
+- Azure CLI
+- Git
+- GitHub
+- VS Code
+- WSL Ubuntu
+
+---
+
+# 🌐 Features Implemented
 
 - Search city weather
-- View current weather and 3-day forecast
-- Save favourite cities locally
-- Responsive UI
-- Health endpoint
-- Environment-variable based configuration
+- View current weather and forecast
+- Save favourite cities
+- Health endpoint monitoring
+- Azure-hosted deployment
+- Application telemetry logging
 
-## Stack
+---
 
-- Python FastAPI
-- Jinja templates
-- Vanilla JavaScript
-- SQLite
-- WeatherAPI
-
-## Run locally
+# 🖥️ Run Locally
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env
-# add your WeatherAPI key to .env
+# Add your WeatherAPI key
 uvicorn app.main:app --reload
-```
 
 Open:
 
-```text
 http://127.0.0.1:8000
-```
 
----
+hase 2 — Azure App Service Deployment
 
-## Commands
+The FastAPI weather application was deployed to Azure App Service using a Linux runtime.
 
-### Create and activate virtual environment
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-```
-
-## Phase 2 – Azure App Service Deployment
-
-The FastAPI weather application was deployed to Azure App Service using a Linux runtime (Python 3.12).
-
-### Azure Resources Created
-
-- Resource Group
-- Linux App Service Plan
-- Linux Web App
-
-### Configuration
+Azure Resources Created
+Resource Group
+Linux App Service Plan
+Linux Web App
+Configuration
 
 Environment variables were configured using Azure App Settings:
 
-- WEATHER_API_KEY
-- APP_ENV
-- DB_PATH
-- SCM_DO_BUILD_DURING_DEPLOYMENT
-
-### Startup Command
-
-```bash
-gunicorn -w 2 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8000 app.main:app
-
+WEATHER_API_KEY
+APP_ENV
+DB_PATH
+SCM_DO_BUILD_DURING_DEPLOYMENT
+Startup Command
+gunicorn -w 2 \
+-k uvicorn.workers.UvicornWorker \
+-b 0.0.0.0:8000 \
+app.main:app
 Deployment Method
-
-The application was deployed using ZIP deployment via Azure CLI:
-
 az webapp deploy \
-  --resource-group <resource-group-name> \
+  --resource-group <resource-group> \
   --name <app-name> \
   --src-path app.zip \
   --type zip
 Validation
-
-Health endpoint validation:
-
 curl https://<app-name>.azurewebsites.net/health
 
-Expected response:
+Expected:
 
 {"status":"ok","environment":"azure-app-service"}
+
+Phase 3 — Monitoring & Observability
+
+Application Insights telemetry was integrated using Azure Monitor OpenTelemetry.
+
+Features Enabled
+Request logging
+Performance monitoring
+Health telemetry
+Structured logging pipeline
+
+Queries used:
+
+requests
+| order by timestamp desc
+| take 20
+traces
+| order by timestamp desc
+| take 20
+
+Planned Phases
+
+Phase 4 — Containerization (Docker)
+Phase 5 — Azure Container Registry (ACR)
+Phase 6 — Azure Container Instances (ACI)
+Phase 7 — Azure Container Apps
+Phase 8 — Azure Functions Alerts
+Phase 9 — CI/CD with GitHub Actions
+Phase 10 — Key Vault Integration
+
+Project Purpose
+
+This project is designed to simulate real-world Azure cloud engineering workflows including deployment, monitoring, logging, and infrastructure lifecycle management.
