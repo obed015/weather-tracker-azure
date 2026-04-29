@@ -1,3 +1,4 @@
+import time
 import httpx
 
 from app.config import Settings
@@ -8,7 +9,12 @@ class WeatherService:
     BASE_URL = "https://api.weatherapi.com/v1/forecast.json"
 
     async def get_weather(self, city: str, days: int = 3) -> dict:
-        log_info(f"Fetching weather data for city: {city}")
+        start_time = time.time()
+
+        log_info(
+            "Weather request started",
+            {"city": city, "days": days}
+        )
 
         params = {
             "key": Settings.WEATHER_API_KEY,
@@ -23,19 +29,46 @@ class WeatherService:
                 response = await client.get(self.BASE_URL, params=params)
                 response.raise_for_status()
 
-                log_info(f"Weather API success for city: {city}")
+                elapsed = round(time.time() - start_time, 2)
+
+                log_info(
+                    "Weather request successful",
+                    {
+                        "city": city,
+                        "days": days,
+                        "status_code": response.status_code,
+                        "latency_seconds": elapsed,
+                    },
+                )
 
                 return response.json()
 
         except httpx.HTTPStatusError as http_err:
+            elapsed = round(time.time() - start_time, 2)
+
             log_error(
-                f"HTTP error while fetching weather for {city}: "
-                f"{http_err.response.status_code}"
+                "Weather API HTTP error",
+                {
+                    "city": city,
+                    "days": days,
+                    "status_code": http_err.response.status_code,
+                    "latency_seconds": elapsed,
+                },
             )
+
             raise
 
         except Exception as ex:
+            elapsed = round(time.time() - start_time, 2)
+
             log_error(
-                f"Unexpected error while fetching weather for {city}: {str(ex)}"
+                "Weather request unexpected error",
+                {
+                    "city": city,
+                    "days": days,
+                    "error": str(ex),
+                    "latency_seconds": elapsed,
+                },
             )
+
             raise
