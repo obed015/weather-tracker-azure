@@ -277,6 +277,48 @@ Validation
 az acr repository list --name <acr-name> --output table
 az acr repository show-tags --name <acr-name> --repository weather-tracker --output table
 
+## Phase 4.3 — Azure Container Instances Validation
+
+The container image stored in Azure Container Registry was deployed to Azure Container Instances for test validation.
+
+### Purpose
+
+Azure Container Instances was used as a lightweight test runtime to confirm that the container image can run successfully in Azure before moving to Azure Container Apps.
+
+### Resources Used
+
+- Azure Container Registry
+- Azure Container Instances
+- Public DNS label
+- Environment variables
+
+### Deployment Validation
+
+The container was deployed from ACR and exposed publicly on port `8000`.
+
+Example validation:
+
+```bash
+az container show \
+  --resource-group <resource-group> \
+  --name weather-tracker-aci \
+  --query "{state:instanceView.state,restartCount:containers[0].instanceView.restartCount,currentState:containers[0].instanceView.currentState.state,fqdn:ipAddress.fqdn}" \
+  --output table
+
+Expected result:
+
+Running  0  Running
+Health Check
+curl http://<aci-fqdn>:8000/health
+Cost Control
+
+ACI was used only for validation and should be deleted after testing:
+
+az container delete \
+  --resource-group <resource-group> \
+  --name weather-tracker-aci \
+  --yes
+
 Phase 5 — Azure Container Registry (ACR)
 Phase 6 — Azure Container Instances (ACI)
 Phase 7 — Azure Container Apps
