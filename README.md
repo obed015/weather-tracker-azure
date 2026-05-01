@@ -319,6 +319,46 @@ az container delete \
   --name weather-tracker-aci \
   --yes
 
+## Phase 4.4 — Azure Container Apps Deployment
+
+The Weather Tracker application was deployed to Azure Container Apps using an image stored in Azure Container Registry.
+
+### Architecture Flow
+
+User Browser  
+→ Azure Container Apps  
+→ FastAPI Application (Docker Container)  
+→ External Weather API  
+→ Response rendered to UI  
+
+### Deployment Steps
+
+1. Built Docker image locally
+
+```bash
+docker build -t weather-tracker:local .
+
+agged and pushed image to Azure Container Registry
+docker tag weather-tracker:local acrweather17789.azurecr.io/weather-tracker:v1
+docker push acrweather17789.azurecr.io/weather-tracker:v1
+Created Azure Container Apps environment
+az containerapp env create ...
+Deployed container to Azure Container Apps
+az containerapp create ...
+Validation
+
+Application deployed successfully and accessible via public HTTPS endpoint.
+
+Health endpoint:
+
+curl https://<container-app-url>/health
+
+Response:
+
+{"status":"ok","environment":"azure-container-apps"}
+
+Weather search tested successfully via UI.
+
 Phase 5 — Azure Container Registry (ACR)
 Phase 6 — Azure Container Instances (ACI)
 Phase 7 — Azure Container Apps
