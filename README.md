@@ -338,14 +338,20 @@ User Browser
 ```bash
 docker build -t weather-tracker:local .
 
-agged and pushed image to Azure Container Registry
+### Tagged and pushed image to Azure Container Registry
+
 docker tag weather-tracker:local acrweather17789.azurecr.io/weather-tracker:v1
 docker push acrweather17789.azurecr.io/weather-tracker:v1
-Created Azure Container Apps environment
+
+### Created Azure Container Apps environment
+
 az containerapp env create ...
-Deployed container to Azure Container Apps
+
+### Deployed container to Azure Container Apps
+
 az containerapp create ...
-Validation
+
+### Validation
 
 Application deployed successfully and accessible via public HTTPS endpoint.
 
@@ -359,12 +365,57 @@ Response:
 
 Weather search tested successfully via UI.
 
-Phase 5 — Azure Container Registry (ACR)
-Phase 6 — Azure Container Instances (ACI)
-Phase 7 — Azure Container Apps
-Phase 8 — Azure Functions Alerts
-Phase 9 — CI/CD with GitHub Actions
-Phase 10 — Key Vault Integration
+## Future Enhancements
+
+The following improvements are planned to extend the system:
+
+### Azure Functions Integration
+
+Add an Azure Function Timer Trigger to:
+
+- Periodically check saved cities
+- Evaluate weather thresholds (rain, wind, temperature)
+- Generate automated alerts
+- Send notifications via email or webhook
+- Log alert events into Application Insights
+
+This would introduce:
+
+- Event-driven architecture
+- Serverless compute
+- Automated background monitoring
+
+The current architecture is designed to support this enhancement without major refactoring.
+
+## Phase 7 — Azure Key Vault Integration
+
+Azure Key Vault was added to securely store the WeatherAPI key.
+
+### Security Improvements
+
+- Weather API key stored in Azure Key Vault
+- Container App uses system-assigned managed identity
+- Managed identity granted `Key Vault Secrets User`
+- Container App references the secret without storing plaintext in app code
+
+### Secret Flow
+
+Container App  
+→ Managed Identity  
+→ Azure Key Vault  
+→ WEATHER-API-KEY  
+→ FastAPI environment variable
+
+### Validation
+
+The application health endpoint remained available:
+
+```bash
+curl https://<container-app-url>/health
+
+### {"status":"ok","environment":"azure-container-apps"}
+
+A live weather search confirmed the app could still access the WeatherAPI key securely.
 
 Project Purpose
 
