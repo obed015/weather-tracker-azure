@@ -248,6 +248,35 @@ Cloud observability engineering
 Planned Phases
 
 Phase 4 — Containerization (Docker)
+
+## Phase 4 — Containerization and Azure Container Registry
+
+The FastAPI application was containerized using Docker and published to Azure Container Registry.
+
+### Containerization
+
+A Dockerfile was created using `python:3.12-slim`. The container runs the FastAPI app using Gunicorn with Uvicorn workers.
+
+### Image Build
+
+```bash
+docker build -t weather-tracker:local .
+
+Local Cotainer Test 
+
+docker run --rm -p 8080:8000 --env-file .env -e APP_ENV=container weather-tracker:local
+
+Azure Container Registry
+
+The image was tagged and pushed to ACR:
+
+docker tag weather-tracker:local <acr-login-server>/weather-tracker:v1
+docker push <acr-login-server>/weather-tracker:v1
+
+Validation
+az acr repository list --name <acr-name> --output table
+az acr repository show-tags --name <acr-name> --repository weather-tracker --output table
+
 Phase 5 — Azure Container Registry (ACR)
 Phase 6 — Azure Container Instances (ACI)
 Phase 7 — Azure Container Apps
