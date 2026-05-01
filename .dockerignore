@@ -1,0 +1,11 @@
+.venv
+.git
+.env
+.env.save
+*.db
+*.sqlite3
+app.zip
+__pycache__
+*.pyc
+.pytest_cache
+.vscode
