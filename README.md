@@ -158,6 +158,93 @@ traces
 | order by timestamp desc
 | take 20
 
+## Phase 3.3 — Azure Monitor Alert Rules
+
+Azure Monitor alert rules were configured to automatically detect application failures based on structured logs stored in Application Insights.
+
+### Alert Logic
+
+A scheduled query alert rule monitors the Application Insights `traces` table.
+
+The alert triggers when:
+
+- Severity level ≥ 3 (Error level logs)
+- Log message contains:
+  
+  Weather API HTTP error
+
+### KQL Query Used
+
+```kql
+traces
+| where severityLevel >= 3
+| where message contains "Weather API HTTP error"
+
+Alert Configuration
+Evaluation Frequency: 5 minutes
+Window Size: 5 minutes
+Threshold: Count > 0
+Severity: 2 (Warning)
+Purpose
+
+This alert ensures that:
+
+Weather API failures are automatically detected
+Azure Monitor continuously evaluates application logs
+Failures are identified without manual log inspection
+Phase 3.4 — Email Notification (Action Groups)
+
+Azure Monitor Action Groups were configured to send email notifications when alerts fire.
+
+Action Group Configuration
+Action Group Name: ag-weather-alerts
+Notification Type: Email
+Linked Alert Rule: alert-weather-api-errors
+Notification Flow
+
+When the system detects:
+
+Weather API HTTP error
+
+Azure Monitor will:
+
+Execute alert query
+Detect failure condition
+Fire alert rule
+Send email notification
+Purpose
+
+This enables:
+
+Real-time failure notification
+Production-grade monitoring
+Automated incident awareness
+Faster troubleshooting response
+Observability Architecture
+
+The monitoring system follows this flow:
+
+User Request
+→ FastAPI Application
+→ Structured Logging
+→ Application Insights
+→ Azure Monitor
+→ Alert Rule
+→ Action Group
+→ Email Notification
+
+Skills Demonstrated
+
+This phase demonstrates:
+
+Azure Monitor configuration
+Application Insights integration
+KQL query development
+Alert rule creation
+Action group setup
+Incident detection automation
+Cloud observability engineering
+
 Planned Phases
 
 Phase 4 — Containerization (Docker)
