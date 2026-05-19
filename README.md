@@ -9,7 +9,7 @@ It is designed to showcase practical Azure engineering skills for cloud, infrast
 
 ### Enterprise Architecture
 
-![Weather Tracker Architecture](docs/images/weather-architecture.png)
+![Weather Tracker Architecture](docs/images/weather-architecture.webp)
 
 Weather Tracker Architecture
 ---
